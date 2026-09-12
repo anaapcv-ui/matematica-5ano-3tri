@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado — Matemática 5º Ano (3º Trimestre) 📝</title>
+<style>
+  :root{--azul:#1e6fd9; --rosa:#e84d8a; --verde:#2eaf6b; --laranja:#f5862e; --roxo:#7c4dd9; --amarelo:#f7c948; --escuro:#2b3a55; --vermelho:#d64545;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI', Verdana, Arial, sans-serif; background:linear-gradient(160deg,#eef4ff,#fdeef6 60%,#fff7e6); min-height:100vh; color:var(--escuro);}
+  .topo{background:linear-gradient(90deg,var(--roxo),var(--rosa)); color:#fff; text-align:center; padding:16px 10px 12px; border-bottom:6px solid var(--amarelo);}
+  .topo h1{font-size:1.4em;} .topo p{opacity:.92; font-size:.92em; margin-top:4px;}
+  .relogioBarra{position:sticky; top:0; z-index:60; background:#0f2d54; color:#fff; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; padding:7px 10px; font-size:.95em;}
+  .relogioBarra b{font-size:1.15em; letter-spacing:1px;}
+  .btnMini{background:#ffffff22; border:1px solid #ffffff55; color:#fff; border-radius:20px; padding:5px 12px; cursor:pointer; font-weight:bold; font-size:.85em;}
+  .btnMini:hover{background:#ffffff33;}
+
+  #conteudoPrincipal.travado{filter:blur(6px); pointer-events:none; user-select:none;}
+  .telaComecar{position:fixed; inset:0; z-index:200; background:linear-gradient(160deg,var(--roxo),var(--rosa)); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:24px;}
+  .telaComecar h2{font-size:1.7em; margin-bottom:10px;} .telaComecar p{font-size:1.05em; max-width:520px; opacity:.95; margin-bottom:22px; line-height:1.5;}
+  .btnComecar{background:var(--amarelo); color:#3a2b00; border:none; border-radius:40px; padding:18px 40px; font-size:1.3em; font-weight:bold; cursor:pointer; box-shadow:0 6px 18px #0004;}
+  .btnComecar:hover{transform:scale(1.04);}
+  .telaPausa{position:fixed; inset:0; z-index:210; background:#0f2d54ee; color:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px;}
+  .telaPausa.mostra{display:flex;} .telaPausa .cont{font-size:2.6em; font-weight:bold; margin:12px 0;}
+
+  .wrap{max-width:820px; margin:0 auto; padding:16px 14px 70px;}
+  .placarBox{background:#fff; border-radius:16px; padding:12px 16px; margin:12px 0; box-shadow:0 3px 10px #0001; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .barraFundo{flex:1; min-width:180px; background:#e8edf5; border-radius:12px; height:20px; overflow:hidden;}
+  .barraFrente{height:100%; width:0%; border-radius:12px; background:linear-gradient(90deg,var(--verde),var(--amarelo)); transition:width .4s;}
+  .ferramentas{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:6px;}
+  .btnFer{border:none; border-radius:20px; padding:8px 16px; font-weight:bold; cursor:pointer; background:#e9eef7; color:var(--escuro);}
+  .btnFer:hover{background:#dbe4f3;}
+  .salvoInfo{text-align:center; font-size:.85em; color:#6a7690; margin:4px 0 10px;}
+
+  .qbox{background:#fff; border-radius:16px; padding:16px; margin:14px 0; box-shadow:0 3px 9px #0001;}
+  .qenun{font-weight:bold; margin-bottom:12px; font-size:1.05em; line-height:1.5;}
+  .qenun .num{display:inline-block; background:var(--roxo); color:#fff; border-radius:8px; padding:2px 9px; margin-right:8px;}
+  .alt{display:flex; align-items:center; gap:10px; text-align:left; border:2px solid #dbe3ef; background:#fff; border-radius:10px; padding:10px 12px; font-size:1em; cursor:pointer; margin:7px 0; width:100%; transition:.15s;}
+  .alt:hover{border-color:var(--azul); background:#f0f6ff;}
+  .alt .letra{font-weight:bold; background:#eef3fb; border-radius:6px; padding:2px 9px;}
+  .alt.marcada{border-color:var(--roxo); background:#f3ecff;}
+  .alt.certa{border-color:var(--verde); background:#d9f5e5;} .alt.certa .letra{background:var(--verde); color:#fff;}
+  .alt.errada{border-color:var(--vermelho); background:#eee; opacity:.85;}
+  .alt:disabled{cursor:default;}
+  .frac{display:inline-block; text-align:center; vertical-align:middle; margin:0 2px; font-weight:bold;}
+  .frac span{display:block; padding:0 5px;} .frac span:first-child{border-bottom:2px solid currentColor;}
+
+  .btnFinal{display:block; margin:20px auto; background:var(--verde); color:#fff; border:none; border-radius:30px; padding:15px 40px; font-size:1.15em; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px #2eaf6b55;}
+  .btnFinal:hover{transform:translateY(-2px);}
+  .resultado{display:none; background:#fff; border-radius:18px; padding:22px; margin:16px 0; text-align:center; box-shadow:0 4px 14px #0002;}
+  .resultado.mostra{display:block;}
+  .resultado .nota{font-size:2.4em; font-weight:bold; color:var(--roxo);}
+  .codigo{background:#f3ecff; border:2px dashed var(--roxo); border-radius:14px; padding:14px; margin:14px 0; font-size:1.3em; font-weight:bold; letter-spacing:2px; color:var(--roxo);}
+
+  .modalBg{position:fixed; inset:0; background:#0007; z-index:300; display:none; align-items:center; justify-content:center; padding:20px;}
+  .modalBg.mostra{display:flex;}
+  .modal{background:#fff; border-radius:18px; padding:22px; max-width:420px; text-align:center; box-shadow:0 10px 30px #0005;}
+  .modal h3{margin-bottom:10px;} .modal p{margin-bottom:16px; line-height:1.5;}
+  .modal .linhaBtn{display:flex; gap:10px; justify-content:center;}
+  .modal button{border:none; border-radius:22px; padding:10px 22px; font-weight:bold; cursor:pointer;}
+  .modal .sim{background:var(--verde); color:#fff;} .modal .nao{background:#e9eef7; color:var(--escuro);}
+  .rodape{text-align:center; padding:20px; color:#6a7690; font-size:.9em;}
+</style>
+</head>
+<body>
+
+<div class="telaComecar" id="telaComecar">
+  <div style="font-size:3em;">⏱️</div>
+  <h2>Pronto para o Simulado?</h2>
+  <p>São 25 questões. Você tem um <b>relógio de 25 minutos</b>; ao final, uma pausinha de 5 min. Suas respostas ficam salvas. Ao terminar, você recebe um <b>código</b> para mostrar aos pais.</p>
+  <button class="btnComecar" id="btnComecar">▶️ Começar o simulado</button>
+</div>
+<div class="telaPausa" id="telaPausa">
+  <div style="font-size:3em;">☕</div>
+  <h2>Hora da pausa!</h2>
+  <p>Levante, beba água e descanse os olhos. O simulado volta em:</p>
+  <div class="cont" id="contPausa">05:00</div>
+</div>
+
+<div class="topo">
+  <h1>📝 Simulado — Matemática 5º Ano</h1>
+  <p>Avaliação Mensal 1 • 3º Trimestre • 25 questões</p>
+</div>
+<div class="relogioBarra">
+  ⏱️ Tempo: <b id="relDisplay">00:00</b>
+  <span id="relSessao">(sessão de 25 min)</span>
+  <button class="btnMini" id="btnTerminar">⏹ Terminar agora</button>
+</div>
+
+<div id="conteudoPrincipal" class="travado">
+<div class="wrap">
+  <div class="ferramentas">
+    <button class="btnFer" id="btnExportar">📥 Exportar</button>
+    <button class="btnFer" id="btnImportar">📤 Importar</button>
+    <button class="btnFer" id="btnZerar">🗑️ Zerar tudo</button>
+    <input type="file" id="fileImport" accept="application/json" style="display:none">
+  </div>
+  <p class="salvoInfo" id="salvoInfo">—</p>
+  <div class="placarBox">
+    <span>Respondidas:</span>
+    <div class="barraFundo"><div class="barraFrente" id="barraProg"></div></div>
+    <span id="progTxt" style="font-weight:bold;">0/25</span>
+  </div>
+
+  <div id="areaQuestoes"></div>
+
+  <button class="btnFinal" id="btnVerResultado">✅ Ver meu resultado</button>
+
+  <div class="resultado" id="resultado">
+    <h3>🏆 Resultado do Simulado</h3>
+    <div class="nota" id="notaTxt">—</div>
+    <div class="estrelas" id="estrelasTxt" style="font-size:1.8em; margin:8px 0;"></div>
+    <p>Código para mostrar aos pais:</p>
+    <div class="codigo" id="codigoTxt">SIM-00-XY</div>
+    <p style="font-size:.95em; color:#6a7690;">As respostas certas ficaram em <b style="color:var(--verde)">verde</b> e as trocadas em cinza. Para ver a explicação de cada questão, abra o <b>Gabarito comentado</b> no guia de estudo.</p>
+  </div>
+</div>
+</div>
+
+<div class="modalBg" id="modalTerminar">
+  <div class="modal">
+    <h3>Terminar o simulado agora?</h3>
+    <p>Vou corrigir com as respostas que você já marcou (as em branco contam como não respondidas) e gerar seu código.</p>
+    <div class="linhaBtn"><button class="sim" id="confTerminar">Sim, corrigir</button><button class="nao" id="cancTerminar">Voltar</button></div>
+  </div>
+</div>
+<div class="modalBg" id="modalMsg">
+  <div class="modal"><h3 id="msgTitulo">Aviso</h3><p id="msgTexto"></p><div class="linhaBtn"><button class="nao" id="fecharMsg">Ok</button></div></div>
+</div>
+
+<div class="rodape">Boa prova, jovem aprendiz! Capriche e confie no que você estudou. 🌟</div>
+
+<script>
+"use strict";
+window.__KITKEY="mat5_3tri_simulado";
+var MEM={};
+var Store={get:function(k){try{var v=localStorage.getItem(k);return v!==null?v:(k in MEM?MEM[k]:null);}catch(e){return (k in MEM)?MEM[k]:null;}},
+  set:function(k,v){try{localStorage.setItem(k,v);}catch(e){MEM[k]=v;}},
+  del:function(k){try{localStorage.removeItem(k);}catch(e){} delete MEM[k];}};
+var KEY=window.__KITKEY;
+function carregaEstado(){try{return JSON.parse(Store.get(KEY))||{};}catch(e){return {};}}
+var estado=carregaEstado(); if(!estado.respostas) estado.respostas={}; if(!estado.finalizado) estado.finalizado=false;
+function salvaEstado(){Store.set(KEY,JSON.stringify(estado)); marcaSalvo();}
+function marcaSalvo(){var d=new Date();document.getElementById('salvoInfo').textContent='💾 salvo automaticamente • '+d.toLocaleTimeString('pt-BR');}
+function msg(t,x){document.getElementById('msgTitulo').textContent=t;document.getElementById('msgTexto').textContent=x;document.getElementById('modalMsg').classList.add('mostra');}
+document.getElementById('fecharMsg').onclick=function(){document.getElementById('modalMsg').classList.remove('mostra');};
+
+/* ===== RELÓGIO ===== */
+var RELOGIO=(function(){
+  var K=KEY+'_tempo', SESSAO=25*60, PAUSA=5*60, INAT=3*60;
+  var dados=carrega(), rodando=false, inativo=false, pausaObrig=false;
+  var restSessao=SESSAO, restPausa=PAUSA, ultima=Date.now(), timer=null, sessaoIni=null;
+  function novo(){return {totalSeg:0,ativoSeg:0,sessoes:[]};}
+  function carrega(){try{return JSON.parse(Store.get(K))||novo();}catch(e){return novo();}}
+  function salva(){Store.set(K,JSON.stringify(dados));}
+  function fmt(s){s=Math.max(0,Math.floor(s));var m=Math.floor(s/60),r=s%60;return (m<10?'0':'')+m+':'+(r<10?'0':'')+r;}
+  function disp(){var el=document.getElementById('relDisplay');if(el)el.textContent=fmt(SESSAO-restSessao);var se=document.getElementById('relSessao');if(se)se.textContent='(faltam '+fmt(restSessao)+')';}
+  function tick(){
+    if(!rodando)return; var agora=Date.now();
+    if(pausaObrig){restPausa--;var cp=document.getElementById('contPausa');if(cp)cp.textContent=fmt(restPausa);
+      if(restPausa<=0){pausaObrig=false;restPausa=PAUSA;restSessao=SESSAO;document.getElementById('telaPausa').classList.remove('mostra');}return;}
+    dados.totalSeg++;
+    if((agora-ultima)>INAT*1000){if(!inativo){inativo=true;var se=document.getElementById('relSessao');if(se)se.textContent='⏸️ pausado — toque para continuar';}salva();return;}
+    if(inativo)inativo=false;
+    dados.ativoSeg++; restSessao--; disp();
+    if(restSessao<=0){pausaObrig=true;document.getElementById('telaPausa').classList.add('mostra');document.getElementById('contPausa').textContent=fmt(restPausa);}
+    if(dados.totalSeg%5===0)salva();
+  }
+  function ativ(){ultima=Date.now();if(inativo){inativo=false;disp();}}
+  function comeca(){if(rodando)return;rodando=true;sessaoIni=new Date().toISOString();
+    document.getElementById('conteudoPrincipal').classList.remove('travado');document.getElementById('telaComecar').style.display='none';
+    ultima=Date.now();timer=setInterval(tick,1000);
+    ['keydown','click','scroll','input','touchstart'].forEach(function(ev){document.addEventListener(ev,ativ,true);});disp();}
+  function termina(){rodando=false;if(timer)clearInterval(timer);
+    if(sessaoIni){dados.sessoes.push({ini:sessaoIni,fim:new Date().toISOString(),ativoSeg:dados.ativoSeg,totalSeg:dados.totalSeg});sessaoIni=null;}
+    salva();var se=document.getElementById('relSessao');if(se)se.textContent='(encerrado)';}
+  window.addEventListener('beforeunload',function(){salva();});
+  return {comeca:comeca,termina:termina,dados:function(){return dados;},_debug:function(o){if(o&&typeof o.restante==='number')restSessao=o.restante;if(o&&typeof o.restPausa==='number')restPausa=o.restPausa;}};
+})();
+document.getElementById('btnComecar').onclick=function(){RELOGIO.comeca();};
+document.getElementById('btnTerminar').onclick=function(){document.getElementById('modalTerminar').classList.add('mostra');};
+document.getElementById('cancTerminar').onclick=function(){document.getElementById('modalTerminar').classList.remove('mostra');};
+document.getElementById('confTerminar').onclick=function(){document.getElementById('modalTerminar').classList.remove('mostra');finaliza();};
+
+/* ===== QUESTÕES (correta marcada por flag, nunca por posição) ===== */
+var QUESTOES=[
+ {id:1, e:'Quantas bases tem uma pirâmide?', a:[{t:'Apenas 1',c:true},{t:'2 bases iguais',c:false},{t:'3 bases',c:false},{t:'Nenhuma base',c:false}]},
+ {id:2, e:'As faces laterais de um <b>prisma</b> têm a forma de:', a:[{t:'Quadriláteros (retângulos)',c:true},{t:'Triângulos',c:false},{t:'Círculos',c:false},{t:'Pentágonos',c:false}]},
+ {id:3, e:'Um sólido tem 2 bases iguais em forma de triângulo. Ele é um:', a:[{t:'Prisma triangular',c:true},{t:'Pirâmide triangular',c:false},{t:'Prisma quadrangular',c:false},{t:'Pirâmide quadrangular',c:false}]},
+ {id:4, e:'Uma pirâmide tem a base em forma de quadrado. Seu nome é:', a:[{t:'Pirâmide quadrangular',c:true},{t:'Prisma quadrangular',c:false},{t:'Pirâmide triangular',c:false},{t:'Pirâmide pentagonal',c:false}]},
+ {id:5, e:'Resolva: (44 − 6) + (18 + 12)', a:[{t:'68',c:true},{t:'60',c:false},{t:'80',c:false},{t:'58',c:false}]},
+ {id:6, e:'Resolva: 220 − (300 − 150)', a:[{t:'70',c:true},{t:'370',c:false},{t:'130',c:false},{t:'220',c:false}]},
+ {id:7, e:'Resolva: 88 + 95 − 12', a:[{t:'171',c:true},{t:'195',c:false},{t:'183',c:false},{t:'159',c:false}]},
+ {id:8, e:'Qual o valor de x em: 80 + x = 140 ?', a:[{t:'60',c:true},{t:'220',c:false},{t:'80',c:false},{t:'70',c:false}]},
+ {id:9, e:'Complete: 23 = 30 − ?', a:[{t:'7',c:true},{t:'53',c:false},{t:'13',c:false},{t:'17',c:false}]},
+ {id:10, e:'Resolva: 8,50 + 7,80', a:[{t:'16,30',c:true},{t:'15,30',c:false},{t:'16,20',c:false},{t:'1,63',c:false}]},
+ {id:11, e:'Resolva: 31,34 − 28,90', a:[{t:'2,44',c:true},{t:'3,44',c:false},{t:'2,54',c:false},{t:'60,24',c:false}]},
+ {id:12, e:'Resolva: 11,50 + 5,25', a:[{t:'16,75',c:true},{t:'16,55',c:false},{t:'17,75',c:false},{t:'6,75',c:false}]},
+ {id:13, e:'Paguei um lanche de R$12,40 com R$20,00. Qual o troco?', a:[{t:'R$ 7,60',c:true},{t:'R$ 8,60',c:false},{t:'R$ 7,40',c:false},{t:'R$ 32,40',c:false}]},
+ {id:14, e:'Resolva: <span class="frac"><span>3</span><span>8</span></span> + <span class="frac"><span>2</span><span>8</span></span>', a:[{t:'5/8',c:true},{t:'5/16',c:false},{t:'6/8',c:false},{t:'1/8',c:false}]},
+ {id:15, e:'Resolva: <span class="frac"><span>1</span><span>3</span></span> + <span class="frac"><span>1</span><span>5</span></span>', a:[{t:'8/15',c:true},{t:'2/8',c:false},{t:'2/15',c:false},{t:'5/8',c:false}]},
+ {id:16, e:'Resolva: <span class="frac"><span>1</span><span>2</span></span> − <span class="frac"><span>2</span><span>5</span></span>', a:[{t:'1/10',c:true},{t:'1/3',c:false},{t:'3/10',c:false},{t:'1/7',c:false}]},
+ {id:17, e:'Um bolo tem 12 pedaços iguais e 5 foram vendidos. Que fração sobrou?', a:[{t:'7/12',c:true},{t:'5/12',c:false},{t:'7/24',c:false},{t:'17/12',c:false}]},
+ {id:18, e:'Resolva: 980 × 15', a:[{t:'14 700',c:true},{t:'14 070',c:false},{t:'15 700',c:false},{t:'9 800',c:false}]},
+ {id:19, e:'Resolva: 39 000 ÷ 6', a:[{t:'6 500',c:true},{t:'650',c:false},{t:'6 000',c:false},{t:'6 560',c:false}]},
+ {id:20, e:'Resolva: 37 × 23', a:[{t:'851',c:true},{t:'840',c:false},{t:'861',c:false},{t:'951',c:false}]},
+ {id:21, e:'156 balas serão divididas igualmente entre 12 crianças. Cada uma recebe:', a:[{t:'13 balas',c:true},{t:'12 balas',c:false},{t:'14 balas',c:false},{t:'26 balas',c:false}]},
+ {id:22, e:'Resolva: 40 − 3 × 7', a:[{t:'19',c:true},{t:'259',c:false},{t:'21',c:false},{t:'28',c:false}]},
+ {id:23, e:'Resolva: (9 × 4 + 4 × 11 + 1 × 18) ÷ 2', a:[{t:'49',c:true},{t:'98',c:false},{t:'58',c:false},{t:'44',c:false}]},
+ {id:24, e:'Resolva: 120 − (2 × 15 + 20)', a:[{t:'70',c:true},{t:'50',c:false},{t:'90',c:false},{t:'30',c:false}]},
+ {id:25, e:'Recebo R$2 500, pago R$900 e R$1 000 e separo metade do que sobrou para poupar: (2 500 − 900 − 1 000) ÷ 2. Quanto poupo?', a:[{t:'R$ 300',c:true},{t:'R$ 600',c:false},{t:'R$ 350',c:false},{t:'R$ 250',c:false}]}
+];
+
+/* embaralhar alternativas com semente fixa por questão (mantém correta pela flag c) */
+function embaralhaSeed(arr,seed){var a=arr.slice();var s=seed;for(var i=a.length-1;i>0;i--){s=(s*9301+49297)%233280;var j=Math.floor(s/233280*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var LETRAS=['A','B','C','D'];
+var ordemAlts={}; // id -> array de alternativas embaralhadas
+var area=document.getElementById('areaQuestoes');
+QUESTOES.forEach(function(q){
+  var alts=embaralhaSeed(q.a, q.id*7+13);
+  ordemAlts[q.id]=alts;
+  var box=document.createElement('div'); box.className='qbox'; box.id='q-'+q.id;
+  var h='<div class="qenun"><span class="num">'+q.id+'</span>'+q.e+'</div>';
+  alts.forEach(function(al,i){
+    h+='<button class="alt" data-q="'+q.id+'" data-i="'+i+'"><span class="letra">'+LETRAS[i]+'</span><span>'+al.t+'</span></button>';
+  });
+  box.innerHTML=h; area.appendChild(box);
+});
+
+/* selecionar alternativa */
+area.addEventListener('click',function(e){
+  if(estado.finalizado) return;
+  var b=e.target.closest('.alt'); if(!b) return;
+  var qid=b.dataset.q, i=parseInt(b.dataset.i,10);
+  document.querySelectorAll('#q-'+qid+' .alt').forEach(function(x){x.classList.remove('marcada');});
+  b.classList.add('marcada');
+  estado.respostas[qid]=i; salvaEstado(); atualizaProg();
+});
+function atualizaProg(){
+  var n=Object.keys(estado.respostas).length;
+  document.getElementById('barraProg').style.width=Math.round(n/QUESTOES.length*100)+'%';
+  document.getElementById('progTxt').textContent=n+'/'+QUESTOES.length;
+}
+
+/* restaurar */
+function restaura(){
+  Object.keys(estado.respostas).forEach(function(qid){
+    var i=estado.respostas[qid]; var b=document.querySelector('#q-'+qid+' .alt[data-i="'+i+'"]'); if(b)b.classList.add('marcada');
+  });
+  atualizaProg();
+  if(estado.finalizado) finaliza(true);
+}
+
+/* código SIM-XX-YY */
+function geraCodigo(acertos){
+  if(estado.codigo) return estado.codigo;
+  var letras='ABCDEFGHJKLMNPQRSTUVWXYZ'; // sem I e O
+  var yy=letras[Math.floor(Math.random()*letras.length)]+letras[Math.floor(Math.random()*letras.length)];
+  var xx=(acertos<10?'0':'')+acertos;
+  estado.codigo='SIM-'+xx+'-'+yy; return estado.codigo;
+}
+
+/* finalizar */
+function finaliza(restaurando){
+  var acertos=0;
+  QUESTOES.forEach(function(q){
+    var alts=ordemAlts[q.id];
+    var esc=estado.respostas[q.id];
+    alts.forEach(function(al,i){
+      var b=document.querySelector('#q-'+q.id+' .alt[data-i="'+i+'"]');
+      b.disabled=true; b.classList.remove('marcada');
+      if(al.c){ b.classList.add('certa'); }
+      if(esc===i && !al.c){ b.classList.add('errada'); }
+    });
+    if(typeof esc==='number' && alts[esc] && alts[esc].c) acertos++;
+  });
+  estado.finalizado=true; estado.acertos=acertos;
+  var cod=geraCodigo(acertos);
+  var pct=Math.round(acertos/QUESTOES.length*100);
+  document.getElementById('notaTxt').textContent=acertos+' / '+QUESTOES.length+'  ('+pct+'%)';
+  var est=Math.round(acertos/QUESTOES.length*5);
+  document.getElementById('estrelasTxt').textContent='⭐'.repeat(est)+'☆'.repeat(5-est);
+  document.getElementById('codigoTxt').textContent=cod;
+  document.getElementById('resultado').classList.add('mostra');
+  document.getElementById('btnVerResultado').style.display='none';
+  if(!restaurando){ salvaEstado(); RELOGIO.termina(); document.getElementById('resultado').scrollIntoView({behavior:'smooth'}); }
+  else { salvaEstado(); }
+}
+document.getElementById('btnVerResultado').onclick=function(){
+  var n=Object.keys(estado.respostas).length;
+  if(n<QUESTOES.length){
+    document.getElementById('msgTitulo').textContent='Ainda faltam questões';
+    document.getElementById('msgTexto').textContent='Você respondeu '+n+' de 25. Quer corrigir mesmo assim? As em branco contam como erro.';
+    var modal=document.getElementById('modalMsg'); modal.classList.add('mostra');
+    var footer=modal.querySelector('.linhaBtn');
+    footer.innerHTML='<button class="sim" style="background:var(--verde);color:#fff" id="fSim">Corrigir</button><button class="nao" id="fNao">Voltar</button>';
+    document.getElementById('fNao').onclick=function(){modal.classList.remove('mostra');footer.innerHTML='<button class="nao" id="fecharMsg">Ok</button>';document.getElementById('fecharMsg').onclick=function(){modal.classList.remove('mostra');};};
+    document.getElementById('fSim').onclick=function(){modal.classList.remove('mostra');finaliza();footer.innerHTML='<button class="nao" id="fecharMsg">Ok</button>';document.getElementById('fecharMsg').onclick=function(){modal.classList.remove('mostra');};};
+    return;
+  }
+  finaliza();
+};
+
+/* exportar/importar/zerar */
+document.getElementById('btnExportar').onclick=function(){
+  var out={estado:estado, tempo:JSON.parse(Store.get(KEY+'_tempo')||'null')};
+  var blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='simulado_matematica_5ano_progresso.json';a.click();
+};
+document.getElementById('btnImportar').onclick=function(){document.getElementById('fileImport').click();};
+document.getElementById('fileImport').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o.estado){estado=o.estado;Store.set(KEY,JSON.stringify(estado));}if(o.tempo){Store.set(KEY+'_tempo',JSON.stringify(o.tempo));}msg('Importado! ✅','A página vai recarregar.');setTimeout(function(){location.reload();},1200);}catch(err){msg('Ops','Não consegui ler esse arquivo.');}};r.readAsText(f);};
+document.getElementById('btnZerar').onclick=function(){
+  document.getElementById('msgTitulo').textContent='Zerar tudo?';
+  document.getElementById('msgTexto').textContent='Isso apaga suas respostas, o resultado e o tempo salvos neste simulado.';
+  var modal=document.getElementById('modalMsg');modal.classList.add('mostra');
+  var footer=modal.querySelector('.linhaBtn');
+  footer.innerHTML='<button class="sim" style="background:var(--vermelho);color:#fff" id="zSim">Sim, zerar</button><button class="nao" id="zNao">Cancelar</button>';
+  document.getElementById('zNao').onclick=function(){modal.classList.remove('mostra');footer.innerHTML='<button class="nao" id="fecharMsg">Ok</button>';document.getElementById('fecharMsg').onclick=function(){modal.classList.remove('mostra');};};
+  document.getElementById('zSim').onclick=function(){Store.del(KEY);Store.del(KEY+'_tempo');location.reload();};
+};
+
+restaura();
+if(Store.get(KEY))marcaSalvo();
+</script>
+</body>
+</html>
