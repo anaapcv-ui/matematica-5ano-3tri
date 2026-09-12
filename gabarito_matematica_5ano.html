@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gabarito comentado — Simulado Matemática 5º Ano</title>
+<style>
+  :root{--azul:#1e6fd9;--verde:#2eaf6b;--roxo:#7c4dd9;--amarelo:#f7c948;--escuro:#2b3a55;--vermelho:#d64545;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Verdana,Arial,sans-serif;background:linear-gradient(160deg,#eef7f0,#f2f7ff);min-height:100vh;color:var(--escuro);}
+  .topo{background:linear-gradient(90deg,var(--verde),var(--azul));color:#fff;text-align:center;padding:16px 10px;border-bottom:6px solid var(--amarelo);}
+  .topo h1{font-size:1.35em;} .topo p{opacity:.92;font-size:.92em;margin-top:4px;}
+  .wrap{max-width:820px;margin:0 auto;padding:18px 14px 60px;}
+  .aviso{background:#fff3cd;border:2px solid var(--amarelo);border-radius:14px;padding:14px;margin:14px 0;line-height:1.6;}
+  .g{background:#fff;border-radius:14px;padding:15px 16px;margin:12px 0;box-shadow:0 3px 9px #0001;border-left:6px solid var(--verde);}
+  .g .num{display:inline-block;background:var(--roxo);color:#fff;border-radius:8px;padding:2px 9px;margin-right:8px;font-weight:bold;}
+  .g .enun{font-weight:bold;margin-bottom:8px;line-height:1.5;}
+  .g .certa{background:#d9f5e5;border-radius:8px;padding:8px 10px;color:#19713f;font-weight:bold;margin:6px 0;}
+  .g .expl{background:#eef6ff;border-radius:8px;padding:8px 10px;margin:6px 0;line-height:1.6;font-size:.97em;}
+  .g .erro{background:#f3f3f3;border-radius:8px;padding:8px 10px;margin:6px 0;line-height:1.5;font-size:.93em;color:#555;}
+  .frac{display:inline-block;text-align:center;vertical-align:middle;margin:0 2px;font-weight:bold;}
+  .frac span{display:block;padding:0 5px;} .frac span:first-child{border-bottom:2px solid currentColor;}
+  a.voltar{display:inline-block;margin:10px 0;color:var(--azul);text-decoration:none;font-weight:bold;}
+  .rodape{text-align:center;padding:20px;color:#6a7690;font-size:.9em;}
+</style>
+</head>
+<body>
+<div class="topo"><h1>✅ Gabarito comentado — Simulado</h1><p>Matemática 5º Ano • 3º Trimestre</p></div>
+<div class="wrap">
+<a class="voltar" href="index.html">← Voltar ao guia de estudo</a>
+<div class="aviso">💡 <b>Para a mãe/pai corrigir:</b> no simulado as alternativas aparecem embaralhadas (a resposta certa não fica sempre na mesma letra). Por isso aqui mostramos a <b>resposta certa pelo conteúdo</b> e a explicação. A pontuação de 0 a 25 já aparece na tela do simulado junto com o código SIM-XX-YY.</div>
+
+<div id="lista"></div>
+
+<a class="voltar" href="index.html">← Voltar ao guia de estudo</a>
+</div>
+<div class="rodape">Errar faz parte de aprender. O importante é entender o porquê. 🌟</div>
+
+<script>
+var G=[
+ {n:1,e:'Quantas bases tem uma pirâmide?',c:'Apenas 1',x:'A pirâmide tem só 1 base; as faces laterais são triângulos que se encontram no vértice (a ponta).',err:'"2 bases iguais" é a característica do prisma, não da pirâmide.'},
+ {n:2,e:'As faces laterais de um prisma têm a forma de:',c:'Quadriláteros (retângulos)',x:'No prisma as faces laterais são quadriláteros. Triângulos são das pirâmides.',err:'Círculos e pentágonos não são faces laterais de prisma.'},
+ {n:3,e:'Sólido com 2 bases iguais em forma de triângulo:',c:'Prisma triangular',x:'Tem 2 bases iguais → é prisma. A base é triângulo → triangular.',err:'"Pirâmide triangular" teria só 1 base.'},
+ {n:4,e:'Pirâmide com base quadrada chama-se:',c:'Pirâmide quadrangular',x:'O nome vem do polígono da base: base quadrada → quadrangular.',err:'"Prisma quadrangular" teria 2 bases iguais.'},
+ {n:5,e:'(44 − 6) + (18 + 12)',c:'68',x:'Parênteses primeiro: 44−6=38 e 18+12=30. Depois 38+30=68.',err:'Erros comuns vêm de não resolver os dois parênteses antes de somar.'},
+ {n:6,e:'220 − (300 − 150)',c:'70',x:'Parêntese primeiro: 300−150=150. Depois 220−150=70.',err:'"370" aparece se alguém soma em vez de subtrair.'},
+ {n:7,e:'88 + 95 − 12',c:'171',x:'Da esquerda para a direita: 88+95=183; 183−12=171.',err:'"183" é o resultado sem tirar o 12.'},
+ {n:8,e:'80 + x = 140',c:'60',x:'Operação contrária: x = 140 − 80 = 60.',err:'"220" aparece se somar em vez de subtrair.'},
+ {n:9,e:'23 = 30 − ?',c:'7',x:'Que número tira de 30 para dar 23? 30 − 7 = 23.',err:'"53" aparece se somar 30+23.'},
+ {n:10,e:'8,50 + 7,80',c:'16,30',x:'Vírgula sob vírgula: 8,50 + 7,80 = 16,30 (0,50+0,80=1,30, sobe 1).',err:'"15,30" esquece o "vai um" dos centavos.'},
+ {n:11,e:'31,34 − 28,90',c:'2,44',x:'31,34 − 28,90 = 2,44.',err:'"3,44" erra o empréstimo na subtração.'},
+ {n:12,e:'11,50 + 5,25',c:'16,75',x:'Inteiros 11+5=16; decimais 0,50+0,25=0,75 → 16,75.',err:'"17,75" soma errado os inteiros.'},
+ {n:13,e:'Troco de R$20,00 por um lanche de R$12,40',c:'R$ 7,60',x:'20,00 − 12,40 = 7,60.',err:'"8,60" erra o empréstimo dos centavos.'},
+ {n:14,e:'3/8 + 2/8',c:'5/8',x:'Mesmo denominador: mantém o 8 e soma os de cima: 3+2=5 → 5/8.',err:'"5/16" soma também os denominadores (errado).'},
+ {n:15,e:'1/3 + 1/5',c:'8/15',x:'Denominador comum 15: 5/15 + 3/15 = 8/15.',err:'"2/8" soma numeradores e denominadores direto (errado).'},
+ {n:16,e:'1/2 − 2/5',c:'1/10',x:'Denominador comum 10: 5/10 − 4/10 = 1/10.',err:'"1/3" ignora a necessidade de igualar denominadores.'},
+ {n:17,e:'Bolo com 12 pedaços, 5 vendidos. Sobrou:',c:'7/12',x:'12/12 − 5/12 = 7/12.',err:'"5/12" é a parte vendida, não a que sobrou.'},
+ {n:18,e:'980 × 15',c:'14 700',x:'980×10=9 800 e 980×5=4 900; soma 14 700.',err:'"9 800" é só 980×10.'},
+ {n:19,e:'39 000 ÷ 6',c:'6 500',x:'39 000 ÷ 6 = 6 500.',err:'"650" erra a quantidade de zeros.'},
+ {n:20,e:'37 × 23',c:'851',x:'37×20=740 e 37×3=111; soma 851.',err:'"861" erra a soma parcial.'},
+ {n:21,e:'156 balas ÷ 12 crianças',c:'13 balas',x:'156 ÷ 12 = 13.',err:'"12" chuta o divisor como resposta.'},
+ {n:22,e:'40 − 3 × 7',c:'19',x:'Multiplicação antes: 3×7=21; depois 40−21=19.',err:'"259" faz 40−3 primeiro (37×7) — ordem errada.'},
+ {n:23,e:'(9 × 4 + 4 × 11 + 1 × 18) ÷ 2',c:'49',x:'Dentro do parêntese: 36+44+18=98; 98÷2=49.',err:'"98" esquece de dividir por 2.'},
+ {n:24,e:'120 − (2 × 15 + 20)',c:'70',x:'No parêntese: 2×15=30, +20=50; 120−50=70.',err:'"50" é só o valor do parêntese.'},
+ {n:25,e:'(2 500 − 900 − 1 000) ÷ 2',c:'R$ 300',x:'2 500−900−1 000=600; 600÷2=300.',err:'"600" esquece de separar a metade.'}
+];
+var lista=document.getElementById('lista');
+G.forEach(function(g){
+  var d=document.createElement('div'); d.className='g';
+  d.innerHTML='<div class="enun"><span class="num">'+g.n+'</span>'+g.e+'</div>'+
+    '<div class="certa">✔️ Resposta certa: '+g.c+'</div>'+
+    '<div class="expl"><b>Por quê:</b> '+g.x+'</div>'+
+    '<div class="erro"><b>Pegadinha:</b> '+g.err+'</div>';
+  lista.appendChild(d);
+});
+</script>
+</body>
+</html>
