@@ -17,15 +17,6 @@
     text-align:center; padding:16px 10px 12px; border-bottom:6px solid var(--amarelo);}
   .topo h1{font-size:1.4em;} .topo p{opacity:.92; font-size:.92em; margin-top:4px;}
 
-  /* ===== relógio ===== */
-  .relogioBarra{position:sticky; top:0; z-index:60; background:#0f2d54; color:#fff;
-    display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
-    padding:7px 10px; font-size:.95em;}
-  .relogioBarra b{font-size:1.15em; letter-spacing:1px;}
-  .relogioBarra .btnMini{background:#ffffff22; border:1px solid #ffffff55; color:#fff;
-    border-radius:20px; padding:5px 12px; cursor:pointer; font-weight:bold; font-size:.85em;}
-  .relogioBarra .btnMini:hover{background:#ffffff33;}
-
   .abas{display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
     background:#ffffffd9; padding:10px; position:sticky; top:38px; z-index:50; box-shadow:0 2px 8px #0002;}
   .aba{border:none; border-radius:24px; padding:10px 18px; font-size:1em; font-weight:bold;
@@ -35,19 +26,9 @@
   .painel{display:none; max-width:900px; margin:0 auto; padding:18px 14px 70px;}
   .painel.ativo{display:block;}
 
-  /* conteúdo travado antes de começar */
-  #conteudoPrincipal.travado{filter:blur(6px); pointer-events:none; user-select:none;}
-  .telaComecar{position:fixed; inset:0; z-index:200; background:linear-gradient(160deg,#1e6fd9,#7c4dd9);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:24px;}
-  .telaComecar h2{font-size:1.8em; margin-bottom:10px;}
-  .telaComecar p{font-size:1.05em; max-width:520px; opacity:.95; margin-bottom:22px; line-height:1.5;}
   .btnComecar{background:var(--amarelo); color:#3a2b00; border:none; border-radius:40px;
     padding:18px 40px; font-size:1.3em; font-weight:bold; cursor:pointer; box-shadow:0 6px 18px #0004;}
   .btnComecar:hover{transform:scale(1.04);}
-  .telaPausa{position:fixed; inset:0; z-index:210; background:#0f2d54ee; color:#fff;
-    display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px;}
-  .telaPausa.mostra{display:flex;}
-  .telaPausa h2{font-size:1.7em; margin-bottom:12px;} .telaPausa .cont{font-size:2.6em; font-weight:bold; margin:12px 0;}
 
   .placarBox{background:#fff; border-radius:16px; padding:12px 16px; margin:12px 0;
     box-shadow:0 3px 10px #0001; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
@@ -157,34 +138,12 @@
 </head>
 <body>
 
-<!-- tela começar -->
-<div class="telaComecar" id="telaComecar">
-  <div style="font-size:3em;">⏱️</div>
-  <h2>Pronto para estudar Matemática?</h2>
-  <p>Este material tem um <b>relógio de estudo de 25 minutos</b>. Estude com atenção; quando o tempo acabar, você faz uma pausinha de 5 minutos para descansar. Suas respostas ficam guardadas.</p>
-  <button class="btnComecar" id="btnComecar">▶️ Começar a estudar</button>
-</div>
-
-<!-- tela de pausa obrigatória -->
-<div class="telaPausa" id="telaPausa">
-  <div style="font-size:3em;">☕</div>
-  <h2>Hora da pausa!</h2>
-  <p>Levante, beba água e alongue o corpo. O material volta sozinho em:</p>
-  <div class="cont" id="contPausa">05:00</div>
-</div>
-
 <div class="topo">
   <h1>📐🔢 Matemática 5º Ano — Guia de Estudo</h1>
   <p>Avaliação Mensal 1 • 3º Trimestre • Geometria, Operações e Álgebra</p>
 </div>
 
-<div class="relogioBarra">
-  ⏱️ Tempo de estudo: <b id="relDisplay">00:00</b>
-  <span id="relSessao">(sessão de 25 min)</span>
-  <button class="btnMini" id="btnTerminar">⏹ Terminar agora</button>
-</div>
-
-<div id="conteudoPrincipal" class="travado">
+<div id="conteudoPrincipal">
 
 <div class="abas">
   <button class="aba ativa" data-painel="p-leitura">📖 Leitura Guiada</button>
@@ -285,16 +244,6 @@
 </div><!-- fim conteudoPrincipal -->
 
 <!-- modais -->
-<div class="modalBg" id="modalTerminar">
-  <div class="modal">
-    <h3>Terminar o estudo agora?</h3>
-    <p>O relógio vai parar. Suas respostas ficam guardadas e você pode voltar quando quiser.</p>
-    <div class="linhaBtn">
-      <button class="sim" id="confTerminar">Sim, terminar</button>
-      <button class="nao" id="cancTerminar">Continuar estudando</button>
-    </div>
-  </div>
-</div>
 <div class="modalBg" id="modalMsg">
   <div class="modal">
     <h3 id="msgTitulo">Aviso</h3>
@@ -337,69 +286,6 @@ abas.forEach(function(a){ a.onclick=function(){
   window.scrollTo({top:0,behavior:'smooth'});
 };});
 document.getElementById('btnIrVF').onclick=function(){ document.querySelector('.aba[data-painel="p-vf"]').click(); };
-
-/* ================= RELÓGIO DE ESTUDO ================= */
-var RELOGIO=(function(){
-  var K=KEY+'_tempo';
-  var SESSAO=25*60, PAUSA=5*60, INAT=3*60; // segundos
-  var dados=carrega();
-  var rodando=false, inativo=false, pausaObrig=false;
-  var restSessao=SESSAO, restPausa=PAUSA;
-  var ultima=Date.now(), timer=null, sessaoIni=null;
-  function novo(){ return {totalSeg:0, ativoSeg:0, sessoes:[]}; }
-  function carrega(){ try{ return JSON.parse(Store.get(K))||novo(); }catch(e){ return novo(); } }
-  function salva(){ Store.set(K, JSON.stringify(dados)); }
-  function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60), r=s%60; return (m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
-  function atualizaDisplay(){
-    var el=document.getElementById('relDisplay'); if(el) el.textContent=fmt(SESSAO-restSessao);
-    var se=document.getElementById('relSessao'); if(se) se.textContent='(faltam '+fmt(restSessao)+' da sessão)';
-  }
-  function tick(){
-    if(!rodando) return;
-    var agora=Date.now();
-    if(pausaObrig){
-      restPausa--; var cp=document.getElementById('contPausa'); if(cp) cp.textContent=fmt(restPausa);
-      if(restPausa<=0){ pausaObrig=false; restPausa=PAUSA; restSessao=SESSAO; document.getElementById('telaPausa').classList.remove('mostra'); }
-      return;
-    }
-    dados.totalSeg++;
-    if((agora-ultima)>INAT*1000){
-      if(!inativo){ inativo=true; var se=document.getElementById('relSessao'); if(se) se.textContent='⏸️ estudo pausado — toque para continuar'; }
-      salva(); return;
-    }
-    if(inativo){ inativo=false; }
-    dados.ativoSeg++; restSessao--;
-    atualizaDisplay();
-    if(restSessao<=0){ pausaObrig=true; document.getElementById('telaPausa').classList.add('mostra'); document.getElementById('contPausa').textContent=fmt(restPausa); }
-    if(dados.totalSeg%5===0) salva();
-  }
-  function registraAtividade(){ ultima=Date.now(); if(inativo){ inativo=false; atualizaDisplay(); } }
-  function comeca(){
-    if(rodando) return;
-    rodando=true; sessaoIni=new Date().toISOString();
-    document.getElementById('conteudoPrincipal').classList.remove('travado');
-    document.getElementById('telaComecar').style.display='none';
-    ultima=Date.now();
-    timer=setInterval(tick,1000);
-    ['keydown','click','scroll','input','touchstart'].forEach(function(ev){ document.addEventListener(ev,registraAtividade,true); });
-    atualizaDisplay();
-  }
-  function termina(){
-    rodando=false; if(timer) clearInterval(timer);
-    if(sessaoIni){ dados.sessoes.push({ini:sessaoIni, fim:new Date().toISOString(), ativoSeg:dados.ativoSeg, totalSeg:dados.totalSeg}); sessaoIni=null; }
-    salva();
-    var se=document.getElementById('relSessao'); if(se) se.textContent='(estudo encerrado)';
-  }
-  window.addEventListener('beforeunload',function(){ salva(); });
-  return {
-    comeca:comeca, termina:termina, dados:function(){return dados;},
-    _debug:function(o){ if(o&&typeof o.restante==='number') restSessao=o.restante; if(o&&typeof o.restPausa==='number') restPausa=o.restPausa; }
-  };
-})();
-document.getElementById('btnComecar').onclick=function(){ RELOGIO.comeca(); };
-document.getElementById('btnTerminar').onclick=function(){ document.getElementById('modalTerminar').classList.add('mostra'); };
-document.getElementById('cancTerminar').onclick=function(){ document.getElementById('modalTerminar').classList.remove('mostra'); };
-document.getElementById('confTerminar').onclick=function(){ document.getElementById('modalTerminar').classList.remove('mostra'); RELOGIO.termina(); };
 
 /* ================= anticópia ================= */
 function palavras(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(function(w){return w.length>0;}); }
@@ -823,24 +709,24 @@ document.getElementById('btnJogarVF').onclick=iniciaVF;
 
 /* ================= exportar / importar / zerar ================= */
 document.getElementById('btnExportar').onclick=function(){
-  var out={estado:estado, tempo:JSON.parse(Store.get(KEY+'_tempo')||'null')};
+  var out={estado:estado};
   var blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='matematica_5ano_estudo_progresso.json'; a.click();
 };
 document.getElementById('btnImportar').onclick=function(){ document.getElementById('fileImport').click(); };
 document.getElementById('fileImport').onchange=function(e){
   var f=e.target.files[0]; if(!f) return; var r=new FileReader();
-  r.onload=function(){ try{ var o=JSON.parse(r.result); if(o.estado){ estado=o.estado; Store.set(KEY,JSON.stringify(estado)); } if(o.tempo){ Store.set(KEY+'_tempo',JSON.stringify(o.tempo)); } msg('Importado! ✅','Suas respostas foram restauradas. A página vai recarregar.'); setTimeout(function(){location.reload();},1200); }catch(err){ msg('Ops','Não consegui ler esse arquivo.'); } };
+  r.onload=function(){ try{ var o=JSON.parse(r.result); if(o.estado){ estado=o.estado; Store.set(KEY,JSON.stringify(estado)); } msg('Importado! ✅','Suas respostas foram restauradas. A página vai recarregar.'); setTimeout(function(){location.reload();},1200); }catch(err){ msg('Ops','Não consegui ler esse arquivo.'); } };
   r.readAsText(f);
 };
 document.getElementById('btnZerar').onclick=function(){
   document.getElementById('msgTitulo').textContent='Zerar tudo?';
-  document.getElementById('msgTexto').textContent='Isso apaga todas as respostas e o tempo de estudo salvos neste material.';
+  document.getElementById('msgTexto').textContent='Isso apaga todas as respostas salvas neste material.';
   var modal=document.getElementById('modalMsg'); modal.classList.add('mostra');
   var footer=modal.querySelector('.linhaBtn');
   footer.innerHTML='<button class="sim" style="background:var(--vermelho);color:#fff" id="zSim">Sim, zerar</button><button class="nao" id="zNao">Cancelar</button>';
   document.getElementById('zNao').onclick=function(){ modal.classList.remove('mostra'); footer.innerHTML='<button class="nao" id="fecharMsg">Ok</button>'; document.getElementById('fecharMsg').onclick=function(){modal.classList.remove('mostra');}; };
-  document.getElementById('zSim').onclick=function(){ Store.del(KEY); Store.del(KEY+'_tempo'); location.reload(); };
+  document.getElementById('zSim').onclick=function(){ Store.del(KEY); location.reload(); };
 };
 
 /* ================= inicialização ================= */
