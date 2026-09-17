@@ -58,7 +58,7 @@
 
   <div class="secao">
     <h2>🚀 Trilha de estudo (siga a ordem!)</h2>
-    <p style="color:#556;margin-bottom:6px;">1 → 2 → 3 → 4. Estude aos poucos, com o relógio de 25 minutos. 💪</p>
+    <p style="color:#556;margin-bottom:6px;">1 → 2 → 3 → 4. Estude aos poucos, no seu ritmo. 💪</p>
     <div class="trilha">
       <a class="cartao c1" href="matematica_5ano_estudo.html">
         <div class="passo">PASSO 1</div><div class="emoji">📖</div>
@@ -82,17 +82,16 @@
   <div class="secao">
     <h2>📝 Como usar este material</h2>
     <ol class="comousar">
-      <li>Clique em <b>Começar a estudar</b> para ligar o relógio de 25 minutos.</li>
-      <li>Faça a <b>Leitura Guiada</b> respondendo as perguntas com suas próprias palavras.</li>
+      <li>Abra a <b>Leitura Guiada</b> e responda as perguntas com suas próprias palavras.</li>
       <li>Depois veja o <b>Resumo</b> e jogue o <b>Verdadeiro ou Falso</b>.</li>
       <li>Faça o <b>Simulado</b> e, no fim, confira o <b>Gabarito</b>.</li>
-      <li>Descanse na pausa de 5 minutos quando o relógio pedir. 😊</li>
+      <li>Faça pausas para descansar sempre que precisar. 😊</li>
     </ol>
   </div>
 
   <div class="relPais">
     <h2>📊 Relatório para os pais</h2>
-    <p>Digite o código para ver o tempo de estudo e os acertos do seu filho. Use o código <b>PAIS-77</b> (fixo da família) ou o código <b>SIM-…</b> que aparece no fim do simulado.</p>
+    <p>Digite o código para ver o progresso e os acertos do seu filho. Use o código <b>PAIS-77</b> (fixo da família) ou o código <b>SIM-…</b> que aparece no fim do simulado.</p>
     <div class="lock">
       <input type="text" id="codigoInput" placeholder="Ex.: PAIS-77">
       <button id="btnAbrirRel">🔓 Abrir relatório</button>
@@ -106,7 +105,6 @@
 <script>
 "use strict";
 function pega(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}}
-function fmtTempo(s){s=Math.max(0,Math.floor(s||0));var h=Math.floor(s/3600),m=Math.floor((s%3600)/60);if(h>0)return h+'h'+(m<10?'0':'')+m+'min';return m+' min';}
 
 document.getElementById('btnAbrirRel').onclick=function(){
   var cod=(document.getElementById('codigoInput').value||'').trim().toUpperCase();
@@ -121,7 +119,6 @@ function montaRelatorio(){
 
   // ---- Estudo (Leitura + Resumo + V/F) ----
   var est=pega('mat5_3tri_estudo')||{};
-  var tEst=pega('mat5_3tri_estudo_tempo')||{};
   var blocosFeitos=0, totalBlocos=6, vermelhas=0, checkNao=0;
   if(est.leitura){
     Object.keys(est.leitura).forEach(function(bid){
@@ -136,8 +133,6 @@ function montaRelatorio(){
   }
   var vfAcertos = est.vf && typeof est.vf.acertos==='number' ? est.vf.acertos : null;
   html+='<div class="cardRel"><h3>📖 Leitura Guiada + Resumo</h3>'+
-    '<div class="linhaRel"><span>Tempo total</span><span>'+fmtTempo(tEst.totalSeg)+'</span></div>'+
-    '<div class="linhaRel"><span>Tempo ativo (estudando de verdade)</span><span>'+fmtTempo(tEst.ativoSeg)+' <span class="ref">(referência: cerca de 1h)</span></span></div>'+
     '<div class="linhaRel"><span>Blocos concluídos</span><span>'+blocosFeitos+' de '+totalBlocos+'</span></div>'+
     '<div class="linhaRel"><span>Respostas para revisar (muito parecidas com o texto)</span><span>'+vermelhas+'</span></div>'+
     '<div class="linhaRel"><span>Pontos marcados como "Não" na autoconferência</span><span>'+checkNao+'</span></div>'+
@@ -145,11 +140,8 @@ function montaRelatorio(){
 
   // ---- Simulado ----
   var sim=pega('mat5_3tri_simulado')||{};
-  var tSim=pega('mat5_3tri_simulado_tempo')||{};
   var respondidas = sim.respostas ? Object.keys(sim.respostas).length : 0;
   html+='<div class="cardRel"><h3>📝 Simulado</h3>'+
-    '<div class="linhaRel"><span>Tempo total</span><span>'+fmtTempo(tSim.totalSeg)+'</span></div>'+
-    '<div class="linhaRel"><span>Tempo ativo</span><span>'+fmtTempo(tSim.ativoSeg)+'</span></div>'+
     '<div class="linhaRel"><span>Questões respondidas</span><span>'+respondidas+' de 25</span></div>'+
     '<div class="linhaRel"><span>Acertos</span><span>'+(sim.finalizado?(sim.acertos+' de 25'):'ainda não finalizou')+'</span></div>'+
     '<div class="linhaRel"><span>Código gerado</span><span>'+(sim.codigo||'—')+'</span></div>'+
