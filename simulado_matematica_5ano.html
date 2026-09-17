@@ -10,19 +10,6 @@
   body{font-family:'Segoe UI', Verdana, Arial, sans-serif; background:linear-gradient(160deg,#eef4ff,#fdeef6 60%,#fff7e6); min-height:100vh; color:var(--escuro);}
   .topo{background:linear-gradient(90deg,var(--roxo),var(--rosa)); color:#fff; text-align:center; padding:16px 10px 12px; border-bottom:6px solid var(--amarelo);}
   .topo h1{font-size:1.4em;} .topo p{opacity:.92; font-size:.92em; margin-top:4px;}
-  .relogioBarra{position:sticky; top:0; z-index:60; background:#0f2d54; color:#fff; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; padding:7px 10px; font-size:.95em;}
-  .relogioBarra b{font-size:1.15em; letter-spacing:1px;}
-  .btnMini{background:#ffffff22; border:1px solid #ffffff55; color:#fff; border-radius:20px; padding:5px 12px; cursor:pointer; font-weight:bold; font-size:.85em;}
-  .btnMini:hover{background:#ffffff33;}
-
-  #conteudoPrincipal.travado{filter:blur(6px); pointer-events:none; user-select:none;}
-  .telaComecar{position:fixed; inset:0; z-index:200; background:linear-gradient(160deg,var(--roxo),var(--rosa)); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; text-align:center; padding:24px;}
-  .telaComecar h2{font-size:1.7em; margin-bottom:10px;} .telaComecar p{font-size:1.05em; max-width:520px; opacity:.95; margin-bottom:22px; line-height:1.5;}
-  .btnComecar{background:var(--amarelo); color:#3a2b00; border:none; border-radius:40px; padding:18px 40px; font-size:1.3em; font-weight:bold; cursor:pointer; box-shadow:0 6px 18px #0004;}
-  .btnComecar:hover{transform:scale(1.04);}
-  .telaPausa{position:fixed; inset:0; z-index:210; background:#0f2d54ee; color:#fff; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px;}
-  .telaPausa.mostra{display:flex;} .telaPausa .cont{font-size:2.6em; font-weight:bold; margin:12px 0;}
-
   .wrap{max-width:820px; margin:0 auto; padding:16px 14px 70px;}
   .placarBox{background:#fff; border-radius:16px; padding:12px 16px; margin:12px 0; box-shadow:0 3px 10px #0001; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
   .barraFundo{flex:1; min-width:180px; background:#e8edf5; border-radius:12px; height:20px; overflow:hidden;}
@@ -64,30 +51,11 @@
 </head>
 <body>
 
-<div class="telaComecar" id="telaComecar">
-  <div style="font-size:3em;">⏱️</div>
-  <h2>Pronto para o Simulado?</h2>
-  <p>São 25 questões. Você tem um <b>relógio de 25 minutos</b>; ao final, uma pausinha de 5 min. Suas respostas ficam salvas. Ao terminar, você recebe um <b>código</b> para mostrar aos pais.</p>
-  <button class="btnComecar" id="btnComecar">▶️ Começar o simulado</button>
-</div>
-<div class="telaPausa" id="telaPausa">
-  <div style="font-size:3em;">☕</div>
-  <h2>Hora da pausa!</h2>
-  <p>Levante, beba água e descanse os olhos. O simulado volta em:</p>
-  <div class="cont" id="contPausa">05:00</div>
-</div>
-
 <div class="topo">
   <h1>📝 Simulado — Matemática 5º Ano</h1>
   <p>Avaliação Mensal 1 • 3º Trimestre • 25 questões</p>
 </div>
-<div class="relogioBarra">
-  ⏱️ Tempo: <b id="relDisplay">00:00</b>
-  <span id="relSessao">(sessão de 25 min)</span>
-  <button class="btnMini" id="btnTerminar">⏹ Terminar agora</button>
-</div>
-
-<div id="conteudoPrincipal" class="travado">
+<div id="conteudoPrincipal">
 <div class="wrap">
   <div class="ferramentas">
     <button class="btnFer" id="btnExportar">📥 Exportar</button>
@@ -117,13 +85,6 @@
 </div>
 </div>
 
-<div class="modalBg" id="modalTerminar">
-  <div class="modal">
-    <h3>Terminar o simulado agora?</h3>
-    <p>Vou corrigir com as respostas que você já marcou (as em branco contam como não respondidas) e gerar seu código.</p>
-    <div class="linhaBtn"><button class="sim" id="confTerminar">Sim, corrigir</button><button class="nao" id="cancTerminar">Voltar</button></div>
-  </div>
-</div>
 <div class="modalBg" id="modalMsg">
   <div class="modal"><h3 id="msgTitulo">Aviso</h3><p id="msgTexto"></p><div class="linhaBtn"><button class="nao" id="fecharMsg">Ok</button></div></div>
 </div>
@@ -144,43 +105,6 @@ function salvaEstado(){Store.set(KEY,JSON.stringify(estado)); marcaSalvo();}
 function marcaSalvo(){var d=new Date();document.getElementById('salvoInfo').textContent='💾 salvo automaticamente • '+d.toLocaleTimeString('pt-BR');}
 function msg(t,x){document.getElementById('msgTitulo').textContent=t;document.getElementById('msgTexto').textContent=x;document.getElementById('modalMsg').classList.add('mostra');}
 document.getElementById('fecharMsg').onclick=function(){document.getElementById('modalMsg').classList.remove('mostra');};
-
-/* ===== RELÓGIO ===== */
-var RELOGIO=(function(){
-  var K=KEY+'_tempo', SESSAO=25*60, PAUSA=5*60, INAT=3*60;
-  var dados=carrega(), rodando=false, inativo=false, pausaObrig=false;
-  var restSessao=SESSAO, restPausa=PAUSA, ultima=Date.now(), timer=null, sessaoIni=null;
-  function novo(){return {totalSeg:0,ativoSeg:0,sessoes:[]};}
-  function carrega(){try{return JSON.parse(Store.get(K))||novo();}catch(e){return novo();}}
-  function salva(){Store.set(K,JSON.stringify(dados));}
-  function fmt(s){s=Math.max(0,Math.floor(s));var m=Math.floor(s/60),r=s%60;return (m<10?'0':'')+m+':'+(r<10?'0':'')+r;}
-  function disp(){var el=document.getElementById('relDisplay');if(el)el.textContent=fmt(SESSAO-restSessao);var se=document.getElementById('relSessao');if(se)se.textContent='(faltam '+fmt(restSessao)+')';}
-  function tick(){
-    if(!rodando)return; var agora=Date.now();
-    if(pausaObrig){restPausa--;var cp=document.getElementById('contPausa');if(cp)cp.textContent=fmt(restPausa);
-      if(restPausa<=0){pausaObrig=false;restPausa=PAUSA;restSessao=SESSAO;document.getElementById('telaPausa').classList.remove('mostra');}return;}
-    dados.totalSeg++;
-    if((agora-ultima)>INAT*1000){if(!inativo){inativo=true;var se=document.getElementById('relSessao');if(se)se.textContent='⏸️ pausado — toque para continuar';}salva();return;}
-    if(inativo)inativo=false;
-    dados.ativoSeg++; restSessao--; disp();
-    if(restSessao<=0){pausaObrig=true;document.getElementById('telaPausa').classList.add('mostra');document.getElementById('contPausa').textContent=fmt(restPausa);}
-    if(dados.totalSeg%5===0)salva();
-  }
-  function ativ(){ultima=Date.now();if(inativo){inativo=false;disp();}}
-  function comeca(){if(rodando)return;rodando=true;sessaoIni=new Date().toISOString();
-    document.getElementById('conteudoPrincipal').classList.remove('travado');document.getElementById('telaComecar').style.display='none';
-    ultima=Date.now();timer=setInterval(tick,1000);
-    ['keydown','click','scroll','input','touchstart'].forEach(function(ev){document.addEventListener(ev,ativ,true);});disp();}
-  function termina(){rodando=false;if(timer)clearInterval(timer);
-    if(sessaoIni){dados.sessoes.push({ini:sessaoIni,fim:new Date().toISOString(),ativoSeg:dados.ativoSeg,totalSeg:dados.totalSeg});sessaoIni=null;}
-    salva();var se=document.getElementById('relSessao');if(se)se.textContent='(encerrado)';}
-  window.addEventListener('beforeunload',function(){salva();});
-  return {comeca:comeca,termina:termina,dados:function(){return dados;},_debug:function(o){if(o&&typeof o.restante==='number')restSessao=o.restante;if(o&&typeof o.restPausa==='number')restPausa=o.restPausa;}};
-})();
-document.getElementById('btnComecar').onclick=function(){RELOGIO.comeca();};
-document.getElementById('btnTerminar').onclick=function(){document.getElementById('modalTerminar').classList.add('mostra');};
-document.getElementById('cancTerminar').onclick=function(){document.getElementById('modalTerminar').classList.remove('mostra');};
-document.getElementById('confTerminar').onclick=function(){document.getElementById('modalTerminar').classList.remove('mostra');finaliza();};
 
 /* ===== QUESTÕES (correta marcada por flag, nunca por posição) ===== */
 var QUESTOES=[
@@ -283,7 +207,7 @@ function finaliza(restaurando){
   document.getElementById('codigoTxt').textContent=cod;
   document.getElementById('resultado').classList.add('mostra');
   document.getElementById('btnVerResultado').style.display='none';
-  if(!restaurando){ salvaEstado(); RELOGIO.termina(); document.getElementById('resultado').scrollIntoView({behavior:'smooth'}); }
+  if(!restaurando){ salvaEstado(); document.getElementById('resultado').scrollIntoView({behavior:'smooth'}); }
   else { salvaEstado(); }
 }
 document.getElementById('btnVerResultado').onclick=function(){
@@ -303,20 +227,20 @@ document.getElementById('btnVerResultado').onclick=function(){
 
 /* exportar/importar/zerar */
 document.getElementById('btnExportar').onclick=function(){
-  var out={estado:estado, tempo:JSON.parse(Store.get(KEY+'_tempo')||'null')};
+  var out={estado:estado};
   var blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='simulado_matematica_5ano_progresso.json';a.click();
 };
 document.getElementById('btnImportar').onclick=function(){document.getElementById('fileImport').click();};
-document.getElementById('fileImport').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o.estado){estado=o.estado;Store.set(KEY,JSON.stringify(estado));}if(o.tempo){Store.set(KEY+'_tempo',JSON.stringify(o.tempo));}msg('Importado! ✅','A página vai recarregar.');setTimeout(function(){location.reload();},1200);}catch(err){msg('Ops','Não consegui ler esse arquivo.');}};r.readAsText(f);};
+document.getElementById('fileImport').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o.estado){estado=o.estado;Store.set(KEY,JSON.stringify(estado));}msg('Importado! ✅','A página vai recarregar.');setTimeout(function(){location.reload();},1200);}catch(err){msg('Ops','Não consegui ler esse arquivo.');}};r.readAsText(f);};
 document.getElementById('btnZerar').onclick=function(){
   document.getElementById('msgTitulo').textContent='Zerar tudo?';
-  document.getElementById('msgTexto').textContent='Isso apaga suas respostas, o resultado e o tempo salvos neste simulado.';
+  document.getElementById('msgTexto').textContent='Isso apaga suas respostas e o resultado salvos neste simulado.';
   var modal=document.getElementById('modalMsg');modal.classList.add('mostra');
   var footer=modal.querySelector('.linhaBtn');
   footer.innerHTML='<button class="sim" style="background:var(--vermelho);color:#fff" id="zSim">Sim, zerar</button><button class="nao" id="zNao">Cancelar</button>';
   document.getElementById('zNao').onclick=function(){modal.classList.remove('mostra');footer.innerHTML='<button class="nao" id="fecharMsg">Ok</button>';document.getElementById('fecharMsg').onclick=function(){modal.classList.remove('mostra');};};
-  document.getElementById('zSim').onclick=function(){Store.del(KEY);Store.del(KEY+'_tempo');location.reload();};
+  document.getElementById('zSim').onclick=function(){Store.del(KEY);location.reload();};
 };
 
 restaura();
